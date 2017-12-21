@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+# rubocop:disable LineLength,SymbolArray
+
 # encoding: UTF-8
-# rubocop:disable LineLength
-#
+
 # Cookbook Name:: wildfly
 # Recipe:: install
 #
@@ -100,6 +102,12 @@ template ::File.join(::File::SEPARATOR, 'etc', 'init.d', wildfly['service']) do
   user 'root'
   group 'root'
   mode '0755'
+
+  notifies :run, 'execute[systemctl daemon-reload]', :immediately if node['init_package'] == 'systemd'
+end
+
+execute 'systemctl daemon-reload' do
+  action :nothing
 end
 
 # Deploy Service Configuration
@@ -167,7 +175,8 @@ template ::File.join(wildfly['base'], 'domain', 'configuration', wildfly['dom'][
     s3_bucket: wildfly['aws']['s3_bucket']
   )
   notifies :restart, "service[#{wildfly['service']}]", :delayed
-  only_if { wildfly['mode'] == 'domain' && (!::File.exist?(::File.join(wildfly['base'], '.chef_deployed')) || wildfly['enforce_config']) }
+  only_if { wildfly['mode'] == 'domain' }
+  only_if { !::File.exist?(::File.join(wildfly['base'], '.chef_deployed')) || wildfly['enforce_config'] }
 end
 
 # => Configure Wildfly Standalone - MGMT Users

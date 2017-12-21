@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 # encoding: UTF-8
-#
+
 # LWRP that sets an attribute
 #
 # Copyright (C) 2014 Brian Dwyer - Intelligent Digital Services
@@ -17,7 +19,7 @@
 # limitations under the License.
 #
 
-actions :set
+actions :set, :add
 default_action :set
 
 attribute :name,          kind_of: String, required: true, name_attribute: true

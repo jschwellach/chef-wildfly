@@ -1,6 +1,8 @@
-# encoding: UTF-8
+# frozen_string_literal: true
 # rubocop:disable LineLength, Metrics/AbcSize
-#
+
+# encoding: UTF-8
+
 # Copyright (C) 2014 Brian Dwyer - Intelligent Digital Services
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -123,7 +125,7 @@ def deploy_remove(runtime_name, keep_content = false)
   deployments = read_deployment_details
   deployments[runtime_name].each do |deployed|
     converge_by((keep_content ? 'Disabling' : 'Removing') + " #{detailed_name(runtime_name, deployed.keys.first)}") do
-      Chef::Log.info 'Undeploying #{detailed_name(runtime_name, deployed.keys.first)}'
+      Chef::Log.info "Undeploying #{detailed_name(runtime_name, deployed.keys.first)}"
       result = shell_out("bin/jboss-cli.sh -c ' undeploy #{deployed.keys.first} #{keep_content ? '--keep-content' : ''}'", user: node['wildfly']['user'], cwd: node['wildfly']['base'])
       result.error! if result.exitstatus != 0
     end
